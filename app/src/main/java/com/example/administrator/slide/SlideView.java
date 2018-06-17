@@ -99,7 +99,6 @@ public class SlideView extends RelativeLayout {
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        System.out.println("width:" + params.width + ",height:" + params.height);
         if (params.height <= 0 || params.width <= 0) {
             throw new IllegalArgumentException("view height or width must be explicit size");
         }
@@ -243,6 +242,7 @@ public class SlideView extends RelativeLayout {
         }
         if (!mScroller.isFinished()) {
             mScroller.forceFinished(true);
+            returnToNormal();
         }
 
         switch (ev.getAction()) {
@@ -250,6 +250,7 @@ public class SlideView extends RelativeLayout {
                 mLastX = ev.getX();
                 mLastY = ev.getY();
                 break;
+
             case MotionEvent.ACTION_MOVE:
                 float x = ev.getX();
                 float y = ev.getY();
@@ -278,15 +279,18 @@ public class SlideView extends RelativeLayout {
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                //                System.out.println("event---->down");
                 mDownX = event.getX();
                 mMotionEventAction = MotionEvent.ACTION_DOWN;
                 break;
             case MotionEvent.ACTION_MOVE:
+                //                System.out.println("event---->move");
                 mMotionEventAction = MotionEvent.ACTION_MOVE;
                 float pointX = event.getX();
                 setScrollEvent(pointX);
                 break;
             case MotionEvent.ACTION_UP:
+                //                System.out.println("event---->up");
                 //手指抬起，计算当前速率
                 float up_x = event.getX();
                 velocityTracker.computeCurrentVelocity(1000, mMaxFlintVelocity);
