@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/bt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        />
+
+    <Button
+        android:id="@+id/bt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bt1"
+        android:text="Hello World!"
+        />
+
+    <com.example.administrator.slide.SlideView
+        android:id="@+id/slide"
+        android:layout_width="match_parent"
+        android:layout_height="600px"
+        android:layout_below="@id/bt1"
+        android:background="#00ff00"
+        >
+
+        <TextView
+            android:layout_width="200px"
+            android:layout_height="300px"
+            android:layout_centerInParent="true"
+            android:background="#00ffff"
+            android:text="abc"
+            />
+
+        <TextView
+            android:id="@+id/right1"
+            android:layout_width="200px"
+            android:layout_height="300px"
+            android:layout_centerInParent="true"
+            android:background="#0055ff"
+            android:text="def"
+            />
+
+        <TextView
+            android:layout_width="200px"
+            android:layout_height="300px"
+            android:layout_centerInParent="true"
+            android:background="#0222ff"
+            android:text="ghi"
+            />
+
+        <TextView
+            android:layout_width="200px"
+            android:layout_height="300px"
+            android:layout_centerInParent="true"
+            android:background="#ff22ff"
+            android:text="jkl"
+            />
+
+
+    </com.example.administrator.slide.SlideView>
+
+</RelativeLayout>
