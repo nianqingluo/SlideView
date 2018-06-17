@@ -20,9 +20,46 @@ import java.util.List;
 
 public class SlideView extends RelativeLayout {
 
-    private int ORIGIN_WIDTH = 200;
-    private float SCALE = 0.8f;
-    private int OVERLAP_DISTANCE = 20;
+    private int mOriginWidth = 0;
+    private float mScale = 0.8f;
+
+    public float getScale() {
+        return mScale;
+    }
+
+    /**
+     * 设置比例,默认0.8
+     *
+     * @param scale 比例
+     */
+    public void setScale(float scale) {
+        if (mScale != scale) {
+            mScale = scale;
+            for (int i = 0; i < mViewList.size(); i++) {
+                setViewTranslationAndScale(mViewList.get(i), i, mMissmatch);
+            }
+        }
+    }
+
+    public int getOverlapDistance() {
+        return mOverlapDistance;
+    }
+
+    /**
+     * 设置重叠的距离
+     *
+     * @param overlapDistance 重叠距离
+     */
+    public void setOverlapDistance(int overlapDistance) {
+        if (mOverlapDistance != overlapDistance) {
+            mOverlapDistance = overlapDistance;
+            for (int i = 0; i < mViewList.size(); i++) {
+                setViewTranslationAndScale(mViewList.get(i), i, mMissmatch);
+            }
+        }
+    }
+
+    private int mOverlapDistance = 20;
 
     //    -0.5f - 0.5f
     private float mMissmatch = 0f;
@@ -62,7 +99,15 @@ public class SlideView extends RelativeLayout {
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-
+        System.out.println("width:" + params.width + ",height:" + params.height);
+        if (params.height <= 0 || params.width <= 0) {
+            throw new IllegalArgumentException("view height or width must be explicit size");
+        }
+        if (mOriginWidth == 0) {
+            mOriginWidth = params.width;
+        } else if (mOriginWidth != params.width) {
+            throw new IllegalArgumentException("the view width is not equal with last view");
+        }
         int childCount = getChildCount();
         RelativeLayout.LayoutParams para = (LayoutParams) params;
         setViewTranslationAndScale(child, childCount, mMissmatch);
@@ -77,17 +122,17 @@ public class SlideView extends RelativeLayout {
 
         float scale = getScale(childCount);
 
-        float zoominTotalOffsetDistance = ORIGIN_WIDTH * scale - scale * ORIGIN_WIDTH * (1 - SCALE) / 2f - OVERLAP_DISTANCE;
+        float zoominTotalOffsetDistance = mOriginWidth * scale - scale * mOriginWidth * (1 - mScale) / 2f - mOverlapDistance;
 
         float zoominOffsetDistance = Math.abs(missmatch * zoominTotalOffsetDistance);
 
-        float zoomoutTotalOffsetDistance = ORIGIN_WIDTH * scale / SCALE - scale / SCALE * ORIGIN_WIDTH * (1 - SCALE) / 2f - OVERLAP_DISTANCE;
+        float zoomoutTotalOffsetDistance = mOriginWidth * scale / mScale - scale / mScale * mOriginWidth * (1 - mScale) / 2f - mOverlapDistance;
 
         float zoomoutOffsetDistance = Math.abs(missmatch * zoomoutTotalOffsetDistance);
 
-        float minifyoffsetScale = 1 + Math.abs(missmatch) * (SCALE - 1);
+        float minifyoffsetScale = 1 + Math.abs(missmatch) * (mScale - 1);
 
-        float magnifyoffsetScale = ((SCALE + 1) / SCALE - 2) * Math.abs(missmatch) + 1;
+        float magnifyoffsetScale = ((mScale + 1) / mScale - 2) * Math.abs(missmatch) + 1;
 
         if (missmatch > 0) {//右偏了
 
@@ -129,6 +174,7 @@ public class SlideView extends RelativeLayout {
     public void removeAllViews() {
         super.removeAllViews();
         mViewList.clear();
+        mOriginWidth = 0;
     }
 
     @Override
@@ -149,12 +195,12 @@ public class SlideView extends RelativeLayout {
 
             int multiple = childCount / 2;
             for (int j = 0; j < multiple; j++) {
-                tempScale *= SCALE;
+                tempScale *= mScale;
             }
         } else {//往右边添加
             int multiple = childCount / 2 + 1;
             for (int j = 0; j < multiple; j++) {
-                tempScale *= SCALE;
+                tempScale *= mScale;
             }
         }
         return tempScale;
@@ -166,7 +212,7 @@ public class SlideView extends RelativeLayout {
             float moveDistance = 0;
             for (int i = 1; i <= moveCount; i++) {
                 float lastScale = getCurrentScale(i);
-                moveDistance += ORIGIN_WIDTH * lastScale - lastScale * ORIGIN_WIDTH * (1 - SCALE) / 2f - OVERLAP_DISTANCE;
+                moveDistance += mOriginWidth * lastScale - lastScale * mOriginWidth * (1 - mScale) / 2f - mOverlapDistance;
             }
 
             return -moveDistance;
@@ -175,7 +221,7 @@ public class SlideView extends RelativeLayout {
             float moveDistance = 0;
             for (int i = 1; i <= moveCount; i++) {
                 float lastScale = getCurrentScale(i);
-                moveDistance += ORIGIN_WIDTH * lastScale - lastScale * ORIGIN_WIDTH * (1 - SCALE) / 2f - OVERLAP_DISTANCE;
+                moveDistance += mOriginWidth * lastScale - lastScale * mOriginWidth * (1 - mScale) / 2f - mOverlapDistance;
             }
             return moveDistance;
         }
@@ -184,7 +230,7 @@ public class SlideView extends RelativeLayout {
     private float getCurrentScale(int i) {
         float totalScale = 1;
         for (int j = 0; j < i - 1; j++) {
-            totalScale *= SCALE;
+            totalScale *= mScale;
         }
         return totalScale;
     }
@@ -269,13 +315,13 @@ public class SlideView extends RelativeLayout {
 
     private void setScrollEvent(float pointX) {
         float deltaX = pointX - mDownX;
-        float moveRatio = deltaX / ORIGIN_WIDTH;
+        float moveRatio = deltaX / mOriginWidth;
 
         mMissmatch = moveRatio;
         boolean needReaddAllView = needReaddAllView();
         if (needReaddAllView) {
             if (mMissmatch > 0) {//往右边移动
-                mDownX += ORIGIN_WIDTH * (int) (mMissmatch + 0.5);
+                mDownX += mOriginWidth * (int) (mMissmatch + 0.5);
                 mMissmatch = mMissmatch - (int) (mMissmatch + 0.5);
 
                 List<View> right = new ArrayList<>();//奇数
@@ -302,7 +348,7 @@ public class SlideView extends RelativeLayout {
                 }
 
             } else {//往左边移动
-                mDownX += ORIGIN_WIDTH * (int) (mMissmatch - 0.5);
+                mDownX += mOriginWidth * (int) (mMissmatch - 0.5);
                 mMissmatch = mMissmatch - (int) (mMissmatch - 0.5);
 
                 List<View> right = new ArrayList<>();//奇数

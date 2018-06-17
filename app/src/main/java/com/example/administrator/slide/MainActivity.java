@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.right1:
                     break;
                 case R.id.bt1:
-
+                    mSlide.setScale(1.2f);
                     break;
                 case R.id.bt2:
                     break;
@@ -25,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-    private RelativeLayout mSlide;
+    private SlideView mSlide;
     private View mRight1;
     private Button mBt1;
 
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mRight1 = findViewById(R.id.right1);
         mRight1.setOnClickListener(mListener);
         findViewById(R.id.bt2).setOnClickListener(mListener);
-        mSlide = (RelativeLayout) findViewById(R.id.slide);
+        mSlide = (SlideView) findViewById(R.id.slide);
         mBt1.setOnClickListener(mListener);
 
     }
