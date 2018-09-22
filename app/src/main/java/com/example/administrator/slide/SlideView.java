@@ -330,18 +330,21 @@ public class SlideView extends RelativeLayout {
 
                 List<View> right = new ArrayList<>();//奇数
                 List<View> left = new ArrayList<>();//偶数
-                right.add(mViewList.get(0));
                 int size = mViewList.size();
-                for (int i = 1; i < size; i++) {
-                    if (i % 2 == 0) {
+                for (int i = 0; i < size; i++) {
+                    if (i == 0) {
+                        right.add(mViewList.get(i));
+                    } else if (i % 2 == 0) {
                         left.add(mViewList.get(i));
                     } else {
                         right.add(mViewList.get(i));
                     }
                 }
-                View view = right.get(right.size() - 1);
-                left.add(view);
-                right.remove(view);
+                if (right.size() != 0) {
+                    View view = right.get(right.size() - 1);
+                    left.add(view);
+                    right.remove(view);
+                }
                 mViewList.clear();
                 for (int i = 0; i < size; i++) {
                     if (i % 2 == 0) {
@@ -357,22 +360,24 @@ public class SlideView extends RelativeLayout {
 
                 List<View> right = new ArrayList<>();//奇数
                 List<View> left = new ArrayList<>();//偶数
-                left.add(mViewList.get(0));
                 int size = mViewList.size();
-                for (int i = 1; i < size; i++) {
+                for (int i = 0; i < size; i++) {
                     if (i % 2 == 0) {
                         left.add(mViewList.get(i));
                     } else {
                         right.add(mViewList.get(i));
                     }
                 }
-                View view = left.get(left.size() - 1);
-                right.add(view);
-                left.remove(view);
+                if (left.size() != 0) {
+                    View view = left.get(left.size() - 1);
+                    right.add(view);
+                    left.remove(view);
+                }
                 mViewList.clear();
-                mViewList.add(right.get(0));
-                for (int i = 1; i < size; i++) {
-                    if (i % 2 == 0) {
+                for (int i = 0; i < size; i++) {
+                    if (i == 0) {
+                        mViewList.add(right.get(0));
+                    } else if (i % 2 == 0) {
                         mViewList.add(left.get(i / 2 - 1));
                     } else {
                         mViewList.add(right.get(i / 2 + 1));
